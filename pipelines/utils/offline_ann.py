@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import paddle
 from pipelines.utils import convert_files_to_dicts, fetch_archive_from_http
@@ -9,7 +10,9 @@ from pipelines.utils import launch_es
 data_dict = {
     'data/dureader_dev':
     "https://paddlenlp.bj.bcebos.com/applications/dureader_dev.zip",
-    "data/baike": "https://paddlenlp.bj.bcebos.com/applications/baike.zip"
+    "data/baike": "https://paddlenlp.bj.bcebos.com/applications/baike.zip",
+    "data/insurance":
+    "https://paddlenlp.bj.bcebos.com/applications/insurance.zip"
 }
 
 parser = argparse.ArgumentParser()
@@ -32,6 +35,30 @@ parser.add_argument('--port',
                     default="9200",
                     help='port of elastic search')
 
+parser.add_argument("--embedding_dim",
+                    default=312,
+                    type=int,
+                    help="The embedding_dim of index")
+
+parser.add_argument('--split_answers',
+                    action='store_true',
+                    help='whether to split lines into question and answers')
+
+parser.add_argument("--query_embedding_model",
+                    default="rocketqa-zh-nano-query-encoder",
+                    type=str,
+                    help="The query_embedding_model path")
+
+parser.add_argument("--passage_embedding_model",
+                    default="rocketqa-zh-nano-para-encoder",
+                    type=str,
+                    help="The passage_embedding_model path")
+
+parser.add_argument("--params_path",
+                    default="checkpoints/model_40/model_state.pdparams",
+                    type=str,
+                    help="The checkpoint path")
+
 parser.add_argument(
     '--delete_index',
     action='store_true',
@@ -44,14 +71,17 @@ def offline_ann(index_name, doc_dir):
 
     launch_es()
 
-    document_store = ElasticsearchDocumentStore(host=args.host,
-                                                port=args.port,
-                                                username="",
-                                                password="",
-                                                index=index_name)
+    document_store = ElasticsearchDocumentStore(
+        host=args.host,
+        port=args.port,
+        username="",
+        password="",
+        embedding_dim=args.embedding_dim,
+        index=index_name)
     # 将每篇文档按照段落进行切分
     dicts = convert_files_to_dicts(dir_path=doc_dir,
                                    split_paragraphs=True,
+                                   split_answers=args.split_answers,
                                    encoding='utf-8')
 
     print(dicts[:3])
@@ -60,27 +90,43 @@ def offline_ann(index_name, doc_dir):
     document_store.write_documents(dicts)
 
     ### 语义索引模型
-    retriever = DensePassageRetriever(
-        document_store=document_store,
-        query_embedding_model="rocketqa-zh-dureader-query-encoder",
-        passage_embedding_model="rocketqa-zh-dureader-query-encoder",
-        max_seq_len_query=64,
-        max_seq_len_passage=256,
-        batch_size=16,
-        use_gpu=True,
-        embed_title=False,
-    )
+    if (os.path.exists(args.params_path)):
+        retriever = DensePassageRetriever(
+            document_store=document_store,
+            query_embedding_model=args.query_embedding_model,
+            params_path=args.params_path,
+            output_emb_size=args.embedding_dim,
+            max_seq_len_query=64,
+            max_seq_len_passage=256,
+            batch_size=16,
+            use_gpu=True,
+            embed_title=False,
+        )
+
+    else:
+        retriever = DensePassageRetriever(
+            document_store=document_store,
+            query_embedding_model=args.query_embedding_model,
+            passage_embedding_model=args.passage_embedding_model,
+            max_seq_len_query=64,
+            max_seq_len_passage=256,
+            batch_size=16,
+            use_gpu=True,
+            embed_title=False,
+        )
 
     # 建立索引库
     document_store.update_embeddings(retriever)
 
 
 def delete_data(index_name):
-    document_store = ElasticsearchDocumentStore(host=args.host,
-                                                port=args.port,
-                                                username="",
-                                                password="",
-                                                index=index_name)
+    document_store = ElasticsearchDocumentStore(
+        host=args.host,
+        port=args.port,
+        username="",
+        password="",
+        embedding_dim=args.embedding_dim,
+        index=index_name)
 
     document_store.delete_index(index_name)
     print('Delete an existing elasticsearch index {} Done.'.format(index_name))
