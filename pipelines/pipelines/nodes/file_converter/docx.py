@@ -33,7 +33,6 @@ logger = logging.getLogger(__name__)
 
 
 class DocxToTextConverter(BaseConverter):
-
     def __init__(
         self,
         remove_numeric_tables: bool = False,
@@ -53,13 +52,12 @@ class DocxToTextConverter(BaseConverter):
         """
 
         # Save init parameters to enable export of component config as YAML
-        self.set_config(remove_numeric_tables=remove_numeric_tables,
-                        valid_languages=valid_languages)
+        self.set_config(remove_numeric_tables=remove_numeric_tables, valid_languages=valid_languages)
 
         self.remove_numeric_tables = remove_numeric_tables
         self.valid_languages = valid_languages
 
-        self.desc_path = 'parse_files'
+        self.desc_path = "parse_files"
         os.makedirs(self.desc_path, exist_ok=True)
 
     def convert(
@@ -94,13 +92,9 @@ class DocxToTextConverter(BaseConverter):
         if valid_languages is None:
             valid_languages = self.valid_languages
         if remove_numeric_tables is True:
-            raise Exception(
-                "'remove_numeric_tables' is not supported by DocxToTextConverter."
-            )
+            raise Exception("'remove_numeric_tables' is not supported by DocxToTextConverter.")
         if valid_languages is True:
-            raise Exception(
-                "Language validation using 'valid_languages' is not supported by DocxToTextConverter."
-            )
+            raise Exception("Language validation using 'valid_languages' is not supported by DocxToTextConverter.")
         # Creating word reader object.
         file = docx.Document(file_path)
         documents = []
@@ -108,53 +102,62 @@ class DocxToTextConverter(BaseConverter):
         # This part will parse the docs files with images, the text and the following images will be added as an document
         for i in range(len(file.paragraphs)):
             paragraph = file.paragraphs[i]
+            # Extracting images from the paragraph
+            image_list = self.get_image_list(file, paragraph)
             # Extracting text from the paragraph
             # If there is text, Adding the text to text_dict
-            if (paragraph.text != ""):
+            if paragraph.text != "":
                 text = paragraph.text
-                if (bool(text_dict) == False):
-                    text_dict = {'text': [text], 'images': []}
+                if bool(text_dict) == False:
+                    text_dict = {"text": [text], "images": []}
                 else:
-                    text_dict['text'].append(text)
-            # Extracting images from the paragraph
+                    text_dict["text"].append(text)
+                if image_list is not None:
+                    image_names = self.save_images(image_list)
+                    text_dict["images"] += image_names
             else:
-                image_list = self.get_image_list(file, paragraph)
                 # If there are not text and images, adding text_dict to documents
-                if (image_list is None and bool(text_dict)):
-                    raw_text = ''.join(text_dict['text'])
+                if image_list is None and bool(text_dict):
+                    raw_text = "".join(text_dict["text"])
                     # If the extracted text is "", skip it
-                    if (raw_text == ''):
+                    if raw_text == "":
                         continue
                     meta_data = {}
-                    meta_data['name'] = meta['name']
-                    meta_data['images'] = text_dict['images']
-                    document = {
-                        "content": raw_text,
-                        "content_type": "text",
-                        "meta": meta_data
-                    }
+                    if meta is not None and "name" in meta:
+                        meta_data["name"] = meta["name"]
+                    meta_data["images"] = text_dict["images"]
+                    document = {"content": raw_text, "content_type": "text", "meta": meta_data}
                     documents.append(document)
 
                     text = paragraph.text
-                    text_dict = {'text': [text], 'images': []}
-                # If there are images, adding image to text_dict
-                elif (image_list is not None):
-                    for i, image in enumerate(image_list):
-                        if image:
-                            # File extension & file content
-                            ext, blob = image.ext, image.blob
-                            # Using md5 to generate image name and save image into desc_path
-                            md5hash = hashlib.md5(blob)
-                            md5_name = md5hash.hexdigest()
-                            image_name = '{}_{}.{}'.format(md5_name, i, ext)
-                            image_path = os.path.join(self.desc_path,
-                                                      image_name)
-                            Image.open(BytesIO(blob)).save(image_path)
-                            # Adding image_name into the text_dict as the image for the text
-                            text_dict['images'].append(image_name)
+                    text_dict = {"text": [text], "images": []}
+                elif image_list is not None:
+                    image_names = self.save_images(image_list)
+                    text_dict["images"] += image_names
                 else:
                     continue
         return documents
+
+    def save_images(self, image_list):
+        """
+        Save the parsed image into desc_path
+        :param image_list: image files from the docx file
+        """
+        image_names = []
+        for i, image in enumerate(image_list):
+            if image:
+                # File extension & file content
+                ext, blob = image.ext, image.blob
+                # Using md5 to generate image name and save image into desc_path
+                md5hash = hashlib.md5(blob)
+                md5_name = md5hash.hexdigest()
+                image_name = "{}_{}.{}".format(md5_name, i, ext)
+                image_path = os.path.join(self.desc_path, image_name)
+                Image.open(BytesIO(blob)).save(image_path)
+                # Adding image_name into the text_dict as the image for the text
+                image_names.append(image_name)
+
+        return image_names
 
     def get_image_list(self, document: Document, paragraph: Paragraph):
         """
@@ -164,13 +167,13 @@ class DocxToTextConverter(BaseConverter):
         """
         result_list = []
         # Looking up the images of the paragraph
-        img_list = paragraph._element.xpath('.//pic:pic')
+        img_list = paragraph._element.xpath(".//pic:pic")
         if len(img_list) == 0 or not img_list:
             return
         # Extracting images from the document
         for i in range(len(img_list)):
             img: CT_Picture = img_list[i]
-            embed = img.xpath('.//a:blip/@r:embed')[0]
+            embed = img.xpath(".//a:blip/@r:embed")[0]
             related_part: ImagePart = document.part.related_parts[embed]
             image: Image = related_part.image
             result_list.append(image)

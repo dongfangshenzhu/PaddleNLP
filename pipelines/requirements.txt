@@ -1,4 +1,4 @@
-paddlenlp
+paddlenlp>=2.4.3
 paddleocr
 requests
 pydantic
@@ -16,8 +16,10 @@ opencv-python>=4.4
 opencv-contrib-python-headless
 python-multipart
 st-annotated-text
+click==8.0
 streamlit==1.9.0
 fastapi
 uvicorn
 markdown
 numba
+pymilvus>=2.1

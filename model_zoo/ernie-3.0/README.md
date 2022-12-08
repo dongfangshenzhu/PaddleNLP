@@ -13,7 +13,7 @@
            * [性能测试](#性能测试)
                * [CPU 性能](#CPU性能)
                * [GPU 性能](#CPU性能)
-   * [使用 FasterTokenizer 加速](#使用FasterTokenizer加速)
+   * [使用 FastTokenizer 加速](#使用FastTokenizer加速)
    * [部署](#部署)
        * [Python 部署](#Python部署)
        * [服务化部署](#服务化部署)
@@ -137,42 +137,80 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
             </td>
         </tr>
         <tr>
-            <td rowspan=2 align=center> 24L1024H </td>
+            <td rowspan=3 align=center> 24L1024H </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>ERNIE 2.0-Large-zh</b></span>
+                <span style="font-size:18px">ERNIE 1.0-Large-cw</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>77.03</b></span>
+                <span style="font-size:18px"><b>79.03</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>76.41</b></span>
+                <span style="font-size:18px">75.97</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>59.67</b></span>
+                <span style="font-size:18px">59.65</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>62.29</b></span>
+                <span style="font-size:18px"><b>62.91</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px">83.82</span>
+                <span style="font-size:18px"><b>85.09</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>79.69</b></span>
+                <span style="font-size:18px"><b>81.73</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px">89.14</span>
+                <span style="font-size:18px"><b>93.09</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>84.10</b></span>
+                <span style="font-size:18px"><b>84.53</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>71.48/90.35</b></span>
+                <span style="font-size:18px"><b>74.22/91.88</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px">85.52</span>
+                <span style="font-size:18px"><b>88.57</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>78.12</b></span>
+                <span style="font-size:18px"><b>84.54</b></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center">
+                <span style="font-size:18px">ERNIE 2.0-Large-zh</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">76.90</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>76.23</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>59.33</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">61.91</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">83.85</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">79.93</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">89.82</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">83.23</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">70.95/90.31</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">86.78</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">78.12</span>
             </td>
         </tr>
         <tr>
@@ -192,13 +230,13 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
                 <span style="font-size:18px">62.02</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>83.88</b></span>
+                <span style="font-size:18px">83.88</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px">78.81</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>90.79</b></span>
+                <span style="font-size:18px">90.79</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px">83.67</span>
@@ -207,7 +245,7 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
                 <span style="font-size:18px">70.58/89.82</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>85.72</b></span>
+                <span style="font-size:18px">85.72</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px">75.26</span>
@@ -219,41 +257,41 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
                 <span style="font-size:18px"><b>ERNIE 3.0-Xbase-zh</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>78.71</b></span>
+                <span style="font-size:18px"><b>78.39</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>76.85</b></span>
+                <span style="font-size:18px"><b>76.16</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>59.89</b></span>
+                <span style="font-size:18px"><b>59.55</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>62.41</b></span>
+                <span style="font-size:18px"><b>61.87</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>84.76</b></span>
+                <span style="font-size:18px"><b>84.40</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>82.51</b></span>
+                <span style="font-size:18px"><b>81.73</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>89.80</b></span>
+                <span style="font-size:18px"><b>88.82</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>84.47</b></span>
+                <span style="font-size:18px"><b>83.60</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>75.49/92.67</b></span>
+                <span style="font-size:18px"><b>75.99/93.00</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>86.36</b></span>
+                <span style="font-size:18px"><b>86.78</b></span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>84.59</b></span>
+                <span style="font-size:18px"><b>84.98</b></span>
             </td>
         </tr>
         <tr>
-            <td rowspan=8 align=center> 12L768H </td>
+            <td rowspan=9 align=center> 12L768H </td>
             <td style="text-align:center">
                 <span style="font-size:18px">
                     <a href="https://bj.bcebos.com/paddlenlp/models/transformers/ernie_3.0/ernie_3.0_base_zh.pdparams">
@@ -262,10 +300,10 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
                 </span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>76.05</b></span>
+                <span style="font-size:18px">76.05</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>75.93</b></span>
+                <span style="font-size:18px">75.93</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px">58.26</span>
@@ -274,7 +312,7 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
                 <span style="font-size:18px">61.56</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>83.02</b></span>
+                <span style="font-size:18px">83.02</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px"><b>80.10</b></span>
@@ -289,10 +327,48 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
                 <span style="font-size:18px">70.71/90.41</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>84.26</b></span>
+                <span style="font-size:18px">84.26</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px"><b>77.88</b></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center">
+                <span style="font-size:18px">ERNIE 1.0-Base-zh-cw</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>76.47</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>76.07</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">57.86</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">59.91</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>83.41</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">79.58</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>89.91</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>83.42</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>72.88/90.78</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px"><b>84.68</b></span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">76.98</span>
             </td>
         </tr>
         <tr>
@@ -318,57 +394,19 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
                 <span style="font-size:18px">79.08</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>88.82</b></span>
+                <span style="font-size:18px">88.82</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>82.83</b></span>
+                <span style="font-size:18px">82.83</span>
             </td>
             <td style="text-align:center">
-                <span style="font-size:18px"><b>71.82/90.38</b></span>
+                <span style="font-size:18px">71.82/90.38</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px">84.04</span>
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px">73.69</span>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:center">
-                <span style="font-size:18px">ERNIE 2.0-Base-zh</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">74.95</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">76.25</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">58.53</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">61.72</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">83.07</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">78.81</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">84.21</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">82.77</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">68.22/88.71</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">82.78</span>
-            </td>
-            <td style="text-align:center">
-                <span style="font-size:18px">73.19</span>
             </td>
         </tr>
         <tr>
@@ -407,6 +445,44 @@ batch_size=32 和 1，预测精度为 FP16 时，GPU 下的效果-时延图：
             </td>
             <td style="text-align:center">
                 <span style="font-size:18px">70.70</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center">
+                <span style="font-size:18px">ERNIE 2.0-Base-zh</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">74.32</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">75.65</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">58.25</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">61.64</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">82.62</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">78.71</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">81.91</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">82.33</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">66.08/87.46</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">82.78</span>
+            </td>
+            <td style="text-align:center">
+                <span style="font-size:18px">73.19</span>
             </td>
         </tr>
         <tr>
@@ -1264,14 +1340,32 @@ qa_model = AutoModelForQuestionAnswering.from_pretrained("ernie-3.0-medium-zh")
 
 ```shell
 # 分类任务
-python run_seq_cls.py  --task_name tnews --model_name_or_path ernie-3.0-medium-zh --do_train
+# 该脚本共支持 CLUE 中 7 个分类任务，超参不全相同，因此分类任务中的超参配置利用 config.yml 配置
+python run_seq_cls.py  \
+    --task_name tnews \
+    --model_name_or_path ernie-3.0-medium-zh \
+    --do_train
 
 # 序列标注任务
-python run_token_cls.py --task_name msra_ner  --model_name_or_path ernie-3.0-medium-zh --do_train
+python run_token_cls.py \
+    --task_name msra_ner  \
+    --model_name_or_path ernie-3.0-medium-zh \
+    --do_train \
+    --num_train_epochs 3 \
+    --learning_rate 0.00005 \
+    --save_steps 100 \
+    --batch_size 32 \
+    --max_seq_length 128 \
+    --remove_unused_columns False
 
 # 阅读理解任务
-python run_qa.py --model_name_or_path ernie-3.0-medium-zh --do_train
-
+python run_qa.py \
+    --model_name_or_path ernie-3.0-medium-zh \
+    --do_train \
+    --learning_rate 0.00003 \
+    --num_train_epochs 8 \
+    --batch_size 24 \
+    --max_seq_length 512
 ```
 
 <a name="模型压缩"></a>
@@ -1455,13 +1549,13 @@ python infer.py --task_name tnews --model_path best_models/TNEWS/compress/0.75/h
 
 三类任务（分类、序列标注、阅读理解）经过裁剪 + 量化后加速比均达到 3 倍左右，所有任务上平均精度损失可控制在 0.5 以内（0.46）。
 
-<a name="使用FasterTokenizer加速"></a>
+<a name="使用FastTokenizer加速"></a>
 
-### 使用 FasterTokenizer 加速
+### 使用 FastTokenizer 加速
 
-FasterTokenizer 是飞桨提供的速度领先的文本处理算子库，集成了 Google 于 2021 年底发布的 LinMaxMatch 算法，该算法引入 Aho-Corasick 将 WordPiece 的时间复杂度从 O(N<sup>2</sup>) 优化到 O(N)，已在 Google 搜索业务中大规模上线。FasterTokenizer 速度显著领先，且呈现 batch_size 越大，优势越突出。例如，设置 batch_size = 64 时，FasterTokenizer 切词速度比 HuggingFace 快 28 倍。
+FastTokenizer 是飞桨提供的速度领先的文本处理算子库，集成了 Google 于 2021 年底发布的 LinMaxMatch 算法，该算法引入 Aho-Corasick 将 WordPiece 的时间复杂度从 O(N<sup>2</sup>) 优化到 O(N)，已在 Google 搜索业务中大规模上线。FastTokenizer 速度显著领先，且呈现 batch_size 越大，优势越突出。例如，设置 batch_size = 64 时，FastTokenizer 切词速度比 HuggingFace 快 28 倍。
 
-在 ERNIE 3.0 轻量级模型裁剪、量化基础上，当设置切词线程数为 4 时，使用 FasterTokenizer 在 NVIDIA Tesla T4 环境下在 IFLYTEK （长文本分类数据集，最大序列长度为 128）数据集上性能提升了 2.39 倍，相比 BERT-Base 性能提升了 7.09 倍，在 Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz、线程数为 8 的情况下性能提升了 1.27 倍，相比 BERT-Base 性能提升了 5.13 倍。加速效果如下图所示：
+在 ERNIE 3.0 轻量级模型裁剪、量化基础上，当设置切词线程数为 4 时，使用 FastTokenizer 在 NVIDIA Tesla T4 环境下在 IFLYTEK （长文本分类数据集，最大序列长度为 128）数据集上性能提升了 2.39 倍，相比 BERT-Base 性能提升了 7.09 倍，在 Intel(R) Xeon(R) Gold 6271C CPU @ 2.60GHz、线程数为 8 的情况下性能提升了 1.27 倍，相比 BERT-Base 性能提升了 5.13 倍。加速效果如下图所示：
 
 <table>
     <tr>
@@ -1470,26 +1564,27 @@ FasterTokenizer 是飞桨提供的速度领先的文本处理算子库，集成�
     </tr>
 </table>
 
-使用 FasterTokenizer 的方式非常简单，在安装 faster_tokenizer 包之后，仅需在 tokenizer 实例化时直接传入 `use_faster=True` 即可。目前已在 Linux 系统下支持 BERT、ERNIE、TinyBERT 等模型。
+使用 FastTokenizer 的方式非常简单，在安装 fast_tokenizer 包之后，仅需在 tokenizer 实例化时直接传入 `use_fast=True` 即可。目前已在 Linux 系统下支持 BERT、ERNIE、TinyBERT 等模型。
 
-安装 faster_tokenizer 包的命令：
+安装 fast_tokenizer 包的命令：
 
 ```shell
-pip install faster_tokenizer
+pip install fast-tokenizer-python
 ```
 
-如需设置切词线程数，需要运行前先设置环境变量 `OMP_NUM_THREADS` ：
+如需设置切词线程数，需要调用`fast_tokenizer.set_thread_num`接口进行设置：
 
-```shell
+```python
 # 设置切词线程数为 4
-export OMP_NUM_THREADS=4
+import fast_tokenizer
+fast_tokenizer.set_thread_num(4)
 ```
 
-调用 `from_pretrained` 时只需轻松传入一个参数 `use_faster=True`：
+调用 `from_pretrained` 时只需轻松传入一个参数 `use_fast=True`：
 
 ```python
 from paddlenlp.transformers import AutoTokenizer
-AutoTokenizer.from_pretrained("ernie-3.0-medium-zh", use_faster=True)
+AutoTokenizer.from_pretrained("ernie-3.0-medium-zh", use_fast=True)
 ```
 
 <a name="部署"></a>
@@ -1541,7 +1636,7 @@ ONNX 导出及 ONNXRuntime 部署请参考：[ONNX 导出及 ONNXRuntime 部署�
 - [【快速上手ERNIE 3.0】机器阅读理解实战](https://aistudio.baidu.com/aistudio/projectdetail/2017189)
 
 - [【快速上手ERNIE 3.0】对话意图识别](https://aistudio.baidu.com/aistudio/projectdetail/2017202?contributionType=1)
-tangtang
+
 
 ## 参考文献
 

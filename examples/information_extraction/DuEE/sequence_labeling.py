@@ -31,7 +31,7 @@ from paddlenlp.transformers import AutoModelForTokenClassification, AutoTokenize
 from paddlenlp.metrics import ChunkEvaluator
 from utils import read_by_lines, write_by_lines, load_dict
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 # yapf: disable
 parser = argparse.ArgumentParser(__doc__)
@@ -98,7 +98,7 @@ def convert_example_to_feature(example,
     tokens, labels = example
     tokenized_input = tokenizer(tokens,
                                 return_length=True,
-                                is_split_into_words=True,
+                                is_split_into_words='token',
                                 max_seq_len=max_seq_len)
 
     input_ids = tokenized_input['input_ids']
